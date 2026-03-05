@@ -1,6 +1,7 @@
 <div align="center">
 
 # SDU-ES-Self-Learning
+
 ### 山东大学工程软件专业 · 课程与参考实现库
 
 [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/zhaobowen/SDU-ES-self-learning/graphs/commit-activity)
@@ -44,7 +45,6 @@ SDU-ES-self-learning/
 └── README.md             # 项目说明文档
 ```
 
-
 ## 🚀 快速开始
 
 ### 📥 获取项目
@@ -58,6 +58,11 @@ cd sdu-es-self-learning
 
 1. 进入 `courses` 目录查找对应课程的示例代码。
 2. 遇到环境配置问题，请优先查看 `tools` 目录下的配置指南。
+
+### 课程链接
+
+[计算思维](cources/01_计算思维/)
+[数值分析与编程](cources/03_数值分析与编程/)
 
 ## ⚠️ 学术诚信声明
 
@@ -75,7 +80,7 @@ cd sdu-es-self-learning
 
 本项目由 **[@achiever-zbw](https://github.com/achiever-zbw)** 发起并担任管理者。
 
-**但这不仅仅是一个个人的代码仓库，它是属于我们每一位 SDU-ES 同学的知识库。** 
+**但这不仅仅是一个个人的代码仓库，它是属于我们每一位 SDU-ES 同学的知识库。**
 我们需要大家的共同参与，汇聚众人的智慧，才能让这个项目真正发挥价值，造福现在的我们和未来的学弟学妹。
 
 无论你是发现了文档中的错别字、有了更优的解题思路、还是想分享踩坑经历，**你的每一次提交都弥足珍贵**！
@@ -84,14 +89,14 @@ cd sdu-es-self-learning
 
 1. **提交 Issue**：发现问题？有新点子？直接提 Issue 告诉我们。
 2. **提交 Pull Request**：
-    - Fork 本仓库
-    - 新建分支 (`git checkout -b feature/AmazingFeature`)
-    - 提交更改 (`git commit -m 'Add some AmazingFeature'`)
-    - 推送到分支 (`git push origin feature/AmazingFeature`)
-    - 提交 Pull Request，管理者会尽快 Review 并合并。
+   - Fork 本仓库
+   - 新建分支 (`git checkout -b feature/AmazingFeature`)
+   - 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+   - 推送到分支 (`git push origin feature/AmazingFeature`)
+   - 提交 Pull Request，管理者会尽快 Review 并合并。
 3. **联系管理者**：如果你有关于项目发展的任何想法，或者想加入长期维护团队，欢迎直接联系我：
-    - 🐧 **QQ**: `1877296512`
-    - 💬 **WeChat**: `z15095021706`
+   - 🐧 **QQ**: `1877296512`
+   - 💬 **WeChat**: `z15095021706`
 
 ## 📄 许可证
 
