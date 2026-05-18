@@ -1,0 +1,38 @@
+var datumId = Query.getEntityIdByFeatureName('前视基准面');
+Sketch.createSketch('草图1', datumId); 
+Sketch.createCircle(new Point(0,0), new Point(0,200));
+Sketch.exitSketch();
+
+var sketchId = Query.getEntityIdByFeatureName('草图1');
+var solidInfo = Solid.extrude('圆柱',{
+  sketch: sketchId,
+  reverse: 0,
+  height1: 500,
+});
+
+// print(solidInfo);
+
+var solidId = Query.getEntityIdByFeatureName('圆柱');
+var res = Query.getElementIntersect({
+  type: 1,
+  point: new Point(0,0,500),
+  direction: new Direction(),
+  entityId: solidId,
+  includeHide: 0,
+  instanceId: '',
+});
+
+// print(res);
+
+var faceId = res['Intersect'][0]['EleId'];
+
+Solid.createFillet('fillet',{
+  type: 0,
+  tangentPropagation: 1,
+  elements: [faceId],
+  radius: [10],
+  multiRadiusFillet: 1,
+  instanceNumber: 0,
+  internalPoints: [],
+  internalRadius: [],
+});

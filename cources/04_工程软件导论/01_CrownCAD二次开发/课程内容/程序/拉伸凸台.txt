@@ -1,0 +1,15 @@
+var frontDatumId = Query.getEntityIdByFeatureName('前视基准面');
+//创建草图
+Sketch.createSketch('自定义草图', frontDatumId);
+var startPnt = new Point(0, 0, 0);
+var endPnt = new Point(100, 100, 0);
+Sketch.createRectangle(startPnt, endPnt);
+Sketch.exitSketch();
+
+var sketchId = Query.getEntityIdByFeatureName('自定义草图');
+//拉伸凸台
+var extrudeInfo = Solid.extrude('extrude',{
+  sketch: sketchId,
+  reverse: 0,
+  height1: 10,
+});

@@ -1,0 +1,7 @@
+import * from "./导出";
+import {
+  show as fun1,
+} from "./导出";
+
+show();
+fun1();
