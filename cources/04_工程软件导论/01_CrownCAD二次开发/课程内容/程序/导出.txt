@@ -1,0 +1,6 @@
+export var a = "CrownCAD";
+function show() {
+  print(a);
+}
+
+export {show};

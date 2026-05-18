@@ -1,0 +1,475 @@
+// 生成建筑模型
+@ui {
+  @input('底柱高度', bind = "dBeam0Height", default = 120, min = 10);
+  @input('层数', bind = "layNum", default = 4);
+}
+
+var frontDatumId = Query.getEntityIdByFeatureName('前视基准面');
+var rightDatumId = Query.getEntityIdByFeatureName('右视基准面');
+var topDatumId = Query.getEntityIdByFeatureName('上视基准面');
+
+// 创建折线段
+function createLines(pnts) {
+  var lenth = pnts.size();
+  for (var i = 0; i < lenth - 1; i++) {
+    Sketch.createLine(pnts[i], pnts[i + 1], 0);
+  }
+}
+
+// 创建梁
+function CreateBeama(sketchIndex, datumPlane, centerPnt, dWidth, dLength, niType) {
+  // 创建草图
+  Sketch.createSketch(sketchIndex, datumPlane);
+  var startPoint = new Point(centerPnt[0] - dWidth / 2.0, centerPnt[1] - dWidth / 2.0, centerPnt[2]);
+  var endPoint = new Point(centerPnt[0] + dWidth / 2.0, centerPnt[1] + dWidth / 2.0, centerPnt[2]);
+  Sketch.createRectangle(startPoint, endPoint, 0);
+  Sketch.exitSketch();
+  var niSketchId = Query.getEntityIdByFeatureName(sketchIndex);
+  Common.setEntityVisible(niSketchId, 0);
+  var height = dLength;
+  // 拉伸成体
+  Solid.extrude('拉伸' + sketchIndex, {
+    sketch: niSketchId,
+    reverse: 0,
+    directionType: 0,
+    direction: new Direction(),
+    extrudeType1: niType,
+    height1: height
+  });
+}
+
+// 创建墙体
+function CreateWall(wallWidth, wallThickness) {
+  var niBtmumPlaneId = Query.getEntityIdByFeatureName('基准面' + 4);
+
+  Sketch.createSketch('草图Wall', niBtmumPlaneId);
+  var wallPnts = [];
+  var d = 2.8;
+  wallPnts.add(new Point(wallWidth / 2, wallWidth / 2, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallWidth / d, wallWidth / 2, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallWidth / d, wallWidth / 2 - wallThickness, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallThickness, wallWidth / 2 - wallThickness, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallThickness, wallWidth / 2 - wallThickness - wallWidth / d, 0));
+  wallPnts.add(new Point(wallWidth / 2, wallWidth / 2 - wallThickness - wallWidth / d, 0));
+  wallPnts.add(new Point(wallWidth / 2, wallWidth / 2, 0));
+  createLines(wallPnts);
+  Sketch.exitSketch();
+  var niWall = Query.getEntityIdByFeatureName('草图Wall');
+  Common.setEntityVisible(niWall, 0);
+
+  var wallHeight = 30;
+  Solid.extrude('拉伸墙体', {
+    sketch: niWall,
+    reverse: 0,
+    directionType: 0,
+    direction: new Direction(),
+    extrudeType1: 0,
+    height1: wallHeight
+  });
+
+  Sketch.createSketch('草图Wall2', niBtmumPlaneId);
+  wallPnts = [];
+  wallPnts.add(new Point(wallWidth / 2, -1 * wallWidth / 2, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallWidth / d, -1 * wallWidth / 2, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallWidth / d, -1 * wallWidth / 2 + wallThickness, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallThickness, -1 * wallWidth / 2 + wallThickness, 0));
+  wallPnts.add(new Point(wallWidth / 2 - wallThickness, -1 * wallWidth / 2 + wallThickness + wallWidth / d, 0));
+  wallPnts.add(new Point(wallWidth / 2, -1 * wallWidth / 2 + wallThickness + wallWidth / d, 0));
+  wallPnts.add(new Point(wallWidth / 2, -1 * wallWidth / 2, 0));
+  createLines(wallPnts);
+  Sketch.exitSketch();
+  var niWall2 = Query.getEntityIdByFeatureName('草图Wall2');
+  Common.setEntityVisible(niWall2, 0);
+  Solid.extrude('拉伸墙体1', {
+    sketch: niWall2,
+    reverse: 0,
+    directionType: 0,
+    direction: new Direction(),
+    extrudeType1: 0,
+    height1: wallHeight
+  });
+
+  Sketch.createSketch('草图Wall3', niBtmumPlaneId);
+  wallPnts = [];
+  wallPnts.add(new Point(-1 * wallWidth / 2, -1 * wallWidth / 2, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallWidth / d, -1 * wallWidth / 2, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallWidth / d, -1 * wallWidth / 2 + wallThickness, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallThickness, -1 * wallWidth / 2 + wallThickness, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallThickness, -1 * wallWidth / 2 + wallThickness + wallWidth / d, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2, -1 * wallWidth / 2 + wallThickness + wallWidth / d, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2, -1 * wallWidth / 2, 0));
+  createLines(wallPnts);
+  Sketch.exitSketch();
+  var niWall3 = Query.getEntityIdByFeatureName('草图Wall3');
+  Common.setEntityVisible(niWall3, 0);
+  Solid.extrude('拉伸墙体2', {
+    sketch: niWall3,
+    reverse: 0,
+    directionType: 0,
+    direction: new Direction(),
+    extrudeType1: 0,
+    height1: wallHeight
+  });
+
+  Sketch.createSketch('草图Wall4', niBtmumPlaneId);
+  wallPnts = [];
+  wallPnts.add(new Point(-1 * wallWidth / 2, wallWidth / 2, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallWidth / d, wallWidth / 2, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallWidth / d, wallWidth / 2 - wallThickness, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallThickness, wallWidth / 2 - wallThickness, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2 + wallThickness, wallWidth / 2 - wallThickness - wallWidth / d, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2, wallWidth / 2 - wallThickness - wallWidth / d, 0));
+  wallPnts.add(new Point(-1 * wallWidth / 2, wallWidth / 2, 0));
+  createLines(wallPnts);
+  Sketch.exitSketch();
+  var niWall4 = Query.getEntityIdByFeatureName('草图Wall4');
+  Common.setEntityVisible(niWall4, 0);
+  Solid.extrude('拉伸墙体3', {
+    sketch: niWall4,
+    reverse: 0,
+    directionType: 0,
+    direction: new Direction(),
+    extrudeType1: 0,
+    height1: wallHeight
+  });
+}
+
+// 创建回形纹
+function createHui(niDatumPlaneID, starPnt, dHeight, index) {
+  Sketch.createSketch('草图ornament' + index, niDatumPlaneID);
+  var pointsArray = [];
+  var dStep = dHeight / 5;
+  var xDis = [3, 0, -1, 0, -1, 0, 6, 0, -1, 0, -1, 0, 3];
+  var yDis = [0, -2, 0, 1, 0, -2, 0, 2, 0, -1, 0, 2, 0];
+  var pPre0 = [];
+  pPre0.add(starPnt[0] + dStep);
+  pPre0.add(starPnt[1] - dStep);
+  pPre0.add(0);
+  pointsArray.add(new Point(pPre0[0], pPre0[1], pPre0[2]));
+  for (var j = 0; j < 4; j++) {
+    var pPre = [];
+    pPre.add(pPre0[0]);
+    pPre.add(pPre0[1]);
+    pPre.add(0);
+    for (var i = 0; i < 13; i++) {
+      var p1 = [];
+      p1.add(pPre[0] + xDis[i] * dStep);
+      p1.add(pPre[1] + yDis[i] * dStep);
+      p1.add(0);
+      pointsArray.add(new Point(p1[0], p1[1], p1[2]));
+      pPre = p1;
+    }
+    pPre0 = pPre;
+  }
+  createLines(pointsArray);
+  Sketch.exitSketch();
+  var niSkID = Query.getEntityIdByFeatureName('草图ornament' + index);
+  Common.setEntityVisible(niSkID, 0);
+
+  Surface.extrudeSurface('拉伸曲面' + index, {
+    curveIds: [niSkID],
+    reverse: 1,
+    directionType: 0,
+    direction: new Direction(),
+    extrudeType1: 0,
+    height1: 10
+  });
+}
+
+// 开始模型绘制
+// 首先绘制底座
+var ccolor = '#FF0000';
+var topcolor = '#FF0000';
+var dWidth = 25;
+var dBeamDis = 33.0;
+var lay0Pnt0 = [dWidth / 2 + dBeamDis / 2, dWidth / 2 + dBeamDis / 2, 0];
+
+// 底座以及底座周边的柱子
+CreateBeama('草图0', frontDatumId, lay0Pnt0, dWidth, dBeam0Height, 0);
+var dWidth0 = 18.6;
+var dBeamWidht1 = 4;
+for (var i = 0; i < 3; i++) {
+  for (var j = 0; j < 3; j++) {
+    var lay1Pnt = [];
+    lay1Pnt.add(lay0Pnt0[0] - dWidth / 2 + i * dWidth / 2);
+    lay1Pnt.add(lay0Pnt0[1] - dWidth / 2 + j * dWidth / 2);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图0' + i + j;
+    CreateBeama(sketchNameTemp, frontDatumId, lay1Pnt, dBeamWidht1, dBeam0Height, 0);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+}
+var lay0Pnt1 = [-1 * dWidth / 2 - dBeamDis / 2, dWidth / 2 + dBeamDis / 2, 0];
+CreateBeama('草图1', frontDatumId, lay0Pnt1, dWidth, dBeam0Height, 0);
+for (var i = 0; i < 3; i++) {
+  for (var j = 0; j < 3; j++) {
+    var lay1Pnt = [];
+    lay1Pnt.add(lay0Pnt1[0] - dWidth / 2 + i * dWidth / 2);
+    lay1Pnt.add(lay0Pnt1[1] - dWidth / 2 + j * dWidth / 2);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图1' + i + j;
+    CreateBeama(sketchNameTemp, frontDatumId, lay1Pnt, dBeamWidht1, dBeam0Height, 0);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+}
+
+var lay0Pnt2 = [dWidth / 2 + dBeamDis / 2, 0.0 - (dWidth / 2 + dBeamDis / 2), 0];
+CreateBeama('草图2', frontDatumId, lay0Pnt2, dWidth, dBeam0Height, 0);
+for (var i = 0; i < 3; i++) {
+  for (var j = 0; j < 3; j++) {
+    var lay1Pnt = [];
+    lay1Pnt.add(lay0Pnt2[0] - dWidth / 2 + i * dWidth / 2);
+    lay1Pnt.add(lay0Pnt2[1] - dWidth / 2 + j * dWidth / 2);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图2' + i + j;
+    CreateBeama(sketchNameTemp, frontDatumId, lay1Pnt, dBeamWidht1, dBeam0Height, 0);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+}
+var lay0Pnt3 = [0.0 - (dWidth / 2 + dBeamDis / 2), 0.0 - (dWidth / 2 + dBeamDis / 2), 0];
+CreateBeama('草图3', frontDatumId, lay0Pnt3, dWidth, dBeam0Height, 0);
+for (var i = 0; i < 3; i++) {
+  for (var j = 0; j < 3; j++) {
+    var lay1Pnt = [];
+    lay1Pnt.add(lay0Pnt3[0] - dWidth / 2 + i * dWidth / 2);
+    lay1Pnt.add(lay0Pnt3[1] - dWidth / 2 + j * dWidth / 2);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图3' + i + j;
+    CreateBeama(sketchNameTemp, frontDatumId, lay1Pnt, dBeamWidht1, dBeam0Height, 0);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+}
+
+// 绘制第0层的两个横梁
+var dBeamWidht = 10;
+var dLay0Widht = dBeamDis + dWidth * 2 + dBeamWidht * 4 * 3;
+var dLay0BeamDis = dBeamDis / 2 + dBeamWidht / 3;
+var dLay0BeamDis1 = dBeamWidht;
+var lay0y = -1 * dBeamWidht / 2;
+for (var i = 0; i < 2; i++) {
+  var layx = dLay0BeamDis + dBeamWidht * i * 2;
+  var lay1Pnt = [];
+  lay1Pnt.add(layx);
+  lay1Pnt.add(lay0y);
+  lay1Pnt.add(0);
+  CreateBeama('草图4' + i, topDatumId, lay1Pnt, dBeamWidht, dLay0Widht - 20, 4);
+  var enityID = Query.getEntityIdByFeatureName('拉伸' + '草图4' + i);
+  Common.setEntityColor(enityID, {
+    color: ccolor,
+    opacity: '1',
+  });
+}
+for (var i = 0; i < 2; i++) {
+  var layx = -1 * dLay0BeamDis - dBeamWidht * i * 2;
+  var lay1Pnt = [];
+  lay1Pnt.add(layx);
+  lay1Pnt.add(lay0y);
+  lay1Pnt.add(0);
+  CreateBeama('草图5' + i, 10, lay1Pnt, dBeamWidht, dLay0Widht - 20, 4);
+  var enityID = Query.getEntityIdByFeatureName('拉伸' + '草图5' + i);
+  Common.setEntityColor(enityID, {
+    color: ccolor,
+    opacity: '1',
+  });
+}
+
+// 绘制所有横梁
+for (var j = 0; j < layNum; j++) {
+  var dLayWidht = dBeamDis + dWidth * 2 + dBeamWidht * 3 * 2 + dBeamWidht * 2 * (j + 2);
+  var dLay1BeamDis = dBeamDis / 2 + dWidth / 2 + dBeamWidht * j * 1.5;
+  var dLay1BeamDis1 = dBeamWidht;
+  var lay1X = dBeamWidht * j * 2 + dBeamWidht / 2;
+  for (var i = 0; i < 3; i++) {
+    var layy = dLay1BeamDis + dBeamWidht * i * 2;
+    var lay1Pnt = [];
+    lay1Pnt.add(lay1X);
+    lay1Pnt.add(layy);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图6' + i + j;
+    CreateBeama(sketchNameTemp, rightDatumId, lay1Pnt, dBeamWidht, dLayWidht, 4);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+  for (var i = 0; i < 3; i++) {
+    var layy = -1 * dLay1BeamDis - dBeamWidht * i * 2;
+    var lay1Pnt = [];
+    lay1Pnt.add(lay1X);
+    lay1Pnt.add(layy);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图7' + i + j;
+    CreateBeama(sketchNameTemp, rightDatumId, lay1Pnt, dBeamWidht, dLayWidht, 4);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+}
+
+// 绘制所有竖梁
+for (var j = 1; j < layNum; j++) {
+  var dLay0Widht = dBeamDis + dWidth * 2 + dBeamWidht * 3 * 2 + dBeamWidht * 2 * (j + 2);
+  var dLay0BeamDis = dBeamDis / 2 + dBeamWidht * (j + 3);
+  var dLay0BeamDis1 = dBeamWidht;
+  var lay0y = j * 2 * dBeamWidht - dBeamWidht / 2;
+  for (var i = 0; i < 3; i++) {
+    var layx = dLay0BeamDis + dBeamWidht * i * 2 - dBeamWidht * 2;
+    var lay1Pnt = [];
+    lay1Pnt.add(layx);
+    lay1Pnt.add(lay0y);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图8' + i + j;
+    CreateBeama(sketchNameTemp, topDatumId, lay1Pnt, dBeamWidht, dLay0Widht, 4);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+  for (var i = 0; i < 3; i++) {
+    var layx = -1 * dLay0BeamDis - dBeamWidht * i * 2 + dBeamWidht * 2;
+    var lay1Pnt = [];
+    lay1Pnt.add(layx);
+    lay1Pnt.add(lay0y);
+    lay1Pnt.add(0);
+    var sketchNameTemp = '草图9' + i + j;
+    CreateBeama(sketchNameTemp, 10, lay1Pnt, dBeamWidht, dLay0Widht, 4);
+    var enityID = Query.getEntityIdByFeatureName('拉伸' + sketchNameTemp);
+    Common.setEntityColor(enityID, {
+      color: ccolor,
+      opacity: '1',
+    });
+  }
+}
+
+//创建顶盖
+var doffsetDis = (layNum - 1) * dBeamWidht * 2 + dBeamWidht;
+var startPoint = new Point(0, 0, 0 - doffsetDis);
+var endPoint = new Point(0, 0, -1);
+var axis = new Axis(startPoint, endPoint);
+Datum.createPlaneByPointNormal('基准面Top', {
+  planeAxis: axis,
+  planePnt: startPoint,
+});
+var niDatumPlaneId = Query.getEntityIdByFeatureName('基准面Top');
+Common.setEntityVisible(niDatumPlaneId, 0);
+Sketch.createSketch('草图Top', niDatumPlaneId);
+var topWidth = dBeamDis + dWidth * 2 + dBeamWidht * 3 * (layNum + 4);
+var topStartPnt = new Point(topWidth / 2, topWidth / 2, 0);
+var topEndPnt = new Point(-1 * topWidth / 2, -1 * topWidth / 2, 0);
+Sketch.createRectangle(topStartPnt, topEndPnt, 0);
+
+Sketch.exitSketch();
+var niSkId = Query.getEntityIdByFeatureName('草图Top');
+Common.setEntityVisible(niSkId, 0);
+
+Solid.extrude('拉伸顶盖', {
+  sketch: niSkId,
+  reverse: 1,
+  directionType: 0,
+  direction: new Direction(),
+  extrudeType1: 0,
+  height1: 10
+});
+
+//编辑草图
+Sketch.editSketch('草图Top');
+var topStartPnt1 = new Point(topWidth / 2 - dBeamDis, topWidth / 2 - dBeamDis, 0);
+var topEndPnt1 = new Point(topWidth / 2 - dBeamDis * 2, topWidth / 2 - dBeamDis * 2, 0);
+var topStartPnt2 = new Point(-1 * topWidth / 2 + dBeamDis, -1 * topWidth / 2 + dBeamDis, 0);
+var topEndPnt2 = new Point(-1 * topWidth / 2 + dBeamDis * 2, -1 * topWidth / 2 + dBeamDis * 2, 0);
+var topStartPnt3 = new Point(-1 * topWidth / 2 + dBeamDis, 1 * topWidth / 2 - dBeamDis, 0);
+var topEndPnt3 = new Point(-1 * topWidth / 2 + dBeamDis * 2, 1 * topWidth / 2 - dBeamDis * 2, 0);
+var topStartPnt4 = new Point(1 * topWidth / 2 - dBeamDis, -1 * topWidth / 2 + dBeamDis, 0);
+var topEndPnt4 = new Point(1 * topWidth / 2 - dBeamDis * 2, -1 * topWidth / 2 + dBeamDis * 2, 0);
+Sketch.createRectangle(topStartPnt1, topEndPnt1, 0);
+Sketch.createRectangle(topStartPnt2, topEndPnt2, 0);
+Sketch.createRectangle(topStartPnt3, topEndPnt3, 0);
+Sketch.createRectangle(topStartPnt4, topEndPnt4, 0);
+Sketch.exitEditSketch('草图Top');
+
+// 设置顶盖颜色
+var topenityID = Query.getEntityIdByFeatureName('拉伸顶盖');
+Common.setEntityColor(topenityID, {
+  color: topcolor,
+  opacity: '1',
+});
+
+// 构建底层的阶梯
+var fNum = 5;
+for (var j = 1; j < fNum; j++) {
+
+  var startPoint = new Point(0, 0, dBeam0Height + 10 * (j - 1));
+  var endPoint = new Point(0, 0, 1);
+  var axis = new Axis(startPoint, endPoint);
+  Datum.createPlaneByPointNormal('基准面' + j, {
+    planeAxis: axis,
+    planePnt: startPoint
+  });
+  var niBtmumPlaneId = Query.getEntityIdByFeatureName('基准面' + j);
+  Common.setEntityVisible(niBtmumPlaneId, 0);
+
+  Sketch.createSketch('草图Botom' + j, niBtmumPlaneId);
+  var wallWidth = topWidth + topWidth * 0.2 * j;
+  var BtmStartPnt = new Point(wallWidth / 2, wallWidth / 2, 0);
+  var BtmEndPnt = new Point(-1 * wallWidth / 2, -1 * wallWidth / 2, 0);
+  Sketch.createRectangle(BtmStartPnt, BtmEndPnt, 0);
+  Sketch.exitSketch();
+  var niSkId = Query.getEntityIdByFeatureName('草图Botom' + j);
+  Common.setEntityVisible(niSkId, 0);
+
+  Solid.extrude('拉伸凸台Botom' + j, {
+    sketch: niSkId,
+    reverse: 1,
+    directionType: 0,
+    direction: new Direction(),
+    extrudeType1: 0,
+    height1: 10
+  });
+}
+// 绘制外围墙
+var wallWidth = topWidth + topWidth * 0.2 * (fNum - 1);
+var wallThickness = 5;
+var wallPoint = new Point(0, wallWidth / 2, 0);
+var wallendPoint = new Point(0, 1, 1);
+var wasllaxis = new Axis(wallPoint, wallendPoint);
+CreateWall(wallWidth, wallThickness);
+
+//绘制花纹
+Datum.createPlaneByPointNormal('基准面5', {
+  planeAxis: wasllaxis,
+  planePnt: wallPoint
+});
+
+var wallDatumPlaneID = Query.getEntityIdByFeatureName('基准面5');
+Common.setEntityVisible(wallDatumPlaneID, 0);
+var niHeight = 30;
+var startPnt = [wallWidth / 2 - wallWidth / 2.8, dBeam0Height + 30, 0];
+createHui(wallDatumPlaneID, startPnt, niHeight, 1);
+var startPnt = [-1 * wallWidth / 2, dBeam0Height + 30, 0];
+createHui(wallDatumPlaneID, startPnt, niHeight, 2);
+
+//隐藏基准面
+Common.setEntityVisible(frontDatumId, 0);
+Common.setEntityVisible(topDatumId, 0);
+Common.setEntityVisible(rightDatumId, 0);
+print("Done");

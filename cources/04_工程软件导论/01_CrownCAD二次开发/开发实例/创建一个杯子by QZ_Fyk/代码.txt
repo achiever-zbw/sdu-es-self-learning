@@ -1,0 +1,101 @@
+@ui(height = "500px",width = "500px"){
+  	
+  //获取输入
+	@input('外径',bind='r',default = 30);
+  	@input('高度',bind='h',default = 90);
+  	@input('杯壁厚度',bind='thickness',default = 3);
+  	@input('握把半径',bind='R',default = 3);
+  	
+  //ui中生成文字
+  	@span(value = '这个模块的功能是根据用户给出的数据生成一个简单的杯子，图一为模块默认值所生成的杯子，图二则是作者夹带的私货');
+  	
+  //ui中生成图片
+  	@image(id='69f3ad8295377e07ad65d2f1', width='30%', height='30%');
+  	@image(id='69f389f195377e07ad574702', width='30%', height='30%');
+  	
+  //ui中生成按钮
+  	@button(name='生成', click=cup(r, h, thickness,r));
+  	
+
+}
+function cup(r,h,t,r2) {
+	Sketch.createSketch('草图1', 8); 
+	
+  //草图画线
+  	Sketch.createLine(new Point(0,0,0),new Point(r,0,0));
+	Sketch.createLine(new Point(r,0,0),new Point(r,h,0));
+	Sketch.createLine(new Point(0,t,0),new Point(r-t,t,0));
+	Sketch.createLine(new Point(r-t,t,0),new Point(r-t,h,0));
+	Sketch.createLine(new Point(0,0,0),new Point(0,t,0));
+	
+  //画圆弧
+  	Sketch.createArcByCenter({
+  		centerPnt: new Point(r-t/2,h,0),
+  		startPnt: new Point(r,h,0),
+  		endPnt: new Point(r-t,h,0),
+	});
+	
+  	Sketch.exitSketch();
+	
+  //旋转成型做杯身
+	Solid.revolve('',{
+		sketch: Query.getEntityIdByFeatureName('草图1'),
+		axis: new Axis(new Point(0,0,0),new Point(0,1,0)),
+		reverse: 0,
+		revolveType1: 0,
+		angle1: 360,
+		toSurface1: 0,
+		toSurface1InsId: '',
+		revolveType2: -1,
+		angle2: 0,
+		toSurface2: 0,
+		toSurface2InsId: '',
+		thicknessType: -1,
+		thickness1: 0,
+		thickness2: 0,
+		mergeType: 0,
+		mergeSolids: [],
+	});
+	
+  //为握把绘制基准面
+	Datum.createPlaneByDistance('new',{planeId:8,invertNormal:0,paralDis:r-t/2,reverse:0,});
+	var newId = Query.getFeatureIdByFeatureName('new');
+  	
+  //以new基准面绘制草图(本应用newId作为草图的平面Id,但出于不知名未发现bug这么写生成不了圆，遂直接使用163作为草图Id)
+  	Sketch.createSketch('草图2', 163); 
+	Sketch.createCircleByThreePoint(new Point(0,h*2/3+R,0), new Point(0,h*2/3-R,0), new Point(R,h*2/3,0));
+	Sketch.exitSketch();
+	
+  //旋转成型做握把
+  	Solid.revolve('',{
+		sketch: Query.getEntityIdByFeatureName('草图2'),
+		axis: new Axis(new Point(-1,h/2,r-t/2),new Point(1,h/2,r-t/2)),
+		reverse: 0,
+		revolveType1: 0,
+		angle1: 180,
+		toSurface1: 0,
+		toSurface1InsId: '',
+		revolveType2: -1,
+		angle2: 0,
+		toSurface2: 0,
+		toSurface2InsId: '',
+		thicknessType: -1,
+		thickness1: 0,
+		thickness2: 0,
+		mergeType: 0,
+		mergeSolids: [],
+	});
+  	
+  //布尔运算并集合并杯身和握把
+  	Solid.booleanUnion('',{entitys:[151,217],});
+
+}
+
+
+
+
+
+
+
+
+

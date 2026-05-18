@@ -1,0 +1,9 @@
+//创建曲线
+var pnt1 = new Point(25,25,0);
+var pnt2 = new Point(25,0,25);
+var pnt3 = new Point(0,25,25);
+var basePnt = new Point(0,0,0);
+var curveInfo = Curve.createCurveByInterpolationPoints('三维曲线',{
+  pickPnts: [pnt1, pnt2, pnt3, basePnt],
+  isClosed: 0,
+});

@@ -1,0 +1,132 @@
+@ui() {
+  @block_row(width = "100px", height = "100px") {
+    @block_column(width = "40px") {
+      @query(name = '拾取元素', bind = 'queryInfo1', filters = [QueryType.DatumPlane]);
+    }
+  }
+  
+  @query(name = '拾取元素', bind = 'queryInfo', filters = [QueryType.DatumPlane]);
+  @button(name = '按钮', click = showQueryInfo());
+
+  @tab {
+    tab(name = '页面1') {
+      @button(name = '按钮1', click = showQueryInfo());
+    }
+    tab(name = '页面2') {
+      @button(name = '按钮2', click = showQueryInfo());
+    }
+    var use = "页面2";
+  }
+  
+  // @input(name='数字', bind='number', default=10.0);
+  // @input_integer(name='整数', bind='integer', default=10);
+  // @input_string(name='字符串', bind='string', default='string');
+  // @checkbox(name='单选框', bind='check', default=true);
+
+  // var select = { "选项 1": 10, "选项 2": 'string', '选项 3': false, '选项 4': 10.11};
+  // @select(name='下拉框', bind='selectedValue', default=select['选项 1']);
+
+  
+  // @image(i@span(value='logo');d='67d7df05c62b11513af68e0a', width='100%', height='100%');
+
+  @table(name="测试") {
+    @row(align = "center", type = "text", head = true) {
+      @cell (value = "型号");
+      @cell (value = "长");
+      @cell (value = "宽");
+      @cell (value = "高");
+    }
+    @row(align = "center", type = "text", head = true) {
+      @cell (value = "T1", bind = "type", type="string");
+      @cell (value = 100, bind = "L", type="number");
+      @cell (value = 50, bind = "W", type="number");
+      @cell (value = 20, bind = "H", type="number");
+    }
+  }
+}
+
+function showQueryInfo() {
+  print(queryInfo);
+}
+
+// 基本数据类型
+// 整数
+var a = 100;
+// print(a);
+// 浮点型
+var b = 100.01;
+var c = 100;
+// print(b);
+// print(c);
+// 布尔类型
+var d = true;
+var e = false;
+// print(d);
+// print(e);
+// 字符串
+var f = "CrownCAD";
+// print(f);
+// print(f.size());
+// print(f.contains('CAD123'));
+// print(f.equals('Crowncad'));
+// print(f.get(1));
+// print(f.replace('CAD', 'cad'));
+// 数组
+var g = [11, "22", 33.33, true, {}];
+// g.add(555);
+// g.contains(11);
+// var res = g.equals([]);
+// var res =g.get(0);
+// var res = g.remove(11);
+// g.set(1,23);
+// print(res);
+// g.remove(11);
+// g.clear();
+// g = [];
+// print(g);
+// 字典
+var h = {
+  name: "华云",
+};
+h.put('age', 20);
+// print(h);
+// var keys = h.keySet();
+// for (var i = 0; i < keys.size(); i++) {
+//   print(keys[i]);
+//   print(h.get(keys[i]));
+// }
+// h.clear();
+// print(h);
+// 值复制、引用复制
+var i = 100;
+var j = [1, 1, 1, 1, 1];
+var k = i;
+var l = j;
+i = 200;
+j.add(2);
+// print(i);
+// print(k);
+// print(j);
+// print(l);
+// 特殊数据类型
+var point1 = new Point(0, 0, 0);
+var point2 = new Point(100, 100, 100);
+var axis = new Axis(point1, point2);
+print(axis);
+// var boxInfo = Solid.createBox('box',{
+//   positionType: 0,
+//   positionPoint: new Point(100,100,100),
+//   length: 40,
+//   width: 50,
+//   height: 60,
+//   lengthReverse: 0,
+//   widthReverse: 0,
+//   heightReverse: 0,
+//   direction: new Direction(new Point(0,0,0), new Point(100,100,0)),
+// });
+// print(boxInfo);
+var vec1 = new Vector3(0, 100, 0);
+var vec2 = new Vector3(100, 0, 0);
+var angle = vec1.angleTo(vec2);
+// print(angle);
+var mat = new Matrix4();

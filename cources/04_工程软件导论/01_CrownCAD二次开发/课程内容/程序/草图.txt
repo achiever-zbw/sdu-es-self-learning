@@ -1,0 +1,7 @@
+var frontDatumId = Query.getEntityIdByFeatureName('前视基准面');
+//创建草图
+Sketch.createSketch('1', frontDatumId);
+var startPnt = new Point(0, 0, 0);
+var endPnt = new Point(100, 100, 0);
+var lineId = Sketch.createLine(startPnt, endPnt);
+Sketch.exitSketch();

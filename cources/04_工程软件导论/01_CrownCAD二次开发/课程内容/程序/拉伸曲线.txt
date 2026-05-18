@@ -1,0 +1,21 @@
+//曲线
+var frontDatumId = Query.getEntityIdByFeatureName('前视基准面');
+
+Sketch.createSketch('草图样条曲线', frontDatumId);
+var p1 = new Point(0,0);
+var p2 = new Point(10,0);
+var p3 = new Point(10,110);
+var p4 = new Point(3,7);
+var pickPnt = [p1, p2, p3, p4];
+var curveId = Sketch.createIntpCurve(pickPnt);
+Sketch.exitSketch();
+
+
+var sketchId = Query.getEntityIdByFeatureName('草图样条曲线');
+//拉伸曲面
+
+Surface.extrudeSurface('拉伸曲面',{
+  curveIds: [sketchId],
+  reverse: 0,
+  height1: 15,
+});

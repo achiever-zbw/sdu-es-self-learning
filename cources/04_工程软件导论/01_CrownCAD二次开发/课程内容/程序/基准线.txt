@@ -1,0 +1,12 @@
+var frontDatumId = Query.getEntityIdByFeatureName('前视基准面');
+//创建草图线
+Sketch.createSketch('自定义草图', frontDatumId);
+var startPnt = new Point(0, 0, 0);
+var endPnt = new Point(100, 100, 0);
+var lineId = Sketch.createLine(startPnt, endPnt);
+Sketch.exitSketch();
+//创建基准线
+var datumLine = Datum.createLine('',{
+  referenceType: 3,
+  referenceEntities: [lineId],
+});

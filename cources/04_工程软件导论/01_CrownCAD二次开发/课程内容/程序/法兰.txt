@@ -1,0 +1,106 @@
+// 1.创建草图1。
+var sketch1 = Sketch.createSketch('sketch1', 0);
+// 2.绘制草图1的形状。
+var p1 = new Point(-5, 60, 0);
+var p2 = new Point(-20, 60, 0);
+var p3 = new Point(-20, 50, 0);
+var p4 = new Point(-30, 30, 0);
+var p5 = new Point(-80, 10, 0);
+var p6 = new Point(-90, 10, 0);
+var p7 = new Point(-90, 0, 0);
+var p8 = new Point(-5, 0, 0);
+
+Sketch.createLine(p1, p2);
+Sketch.createLine(p2, p3);
+var line1 = Sketch.createLine(p3, p4);
+var line2 = Sketch.createLine(p5, p6);
+Sketch.createLine(p6, p7);
+Sketch.createLine(p7, p8);
+Sketch.createLine(p8, p1);
+
+var midPoint = new Point(-30, 0, 0);
+// 3.以 p4 为圆弧起点点坐标，p5 为圆弧终点点坐标，midPoint 为圆弧上一点，创建三点圆弧。
+var arc1 = Sketch.createArcByThreePoint(p4, p5, midPoint);
+
+// 4.创建 line1 与 arc1 相切约束。
+Sketch.addConstraint({
+    constraintType: ConstraintType.Tangency,
+    firstSnapId: line1,
+    firstSnapType: 1,
+    firstPickPnt: [p4.x, p4.y, p4.z],
+    secondSnapId: arc1,
+    secondSnapType: 1,
+    secondPickPnt: [midPoint.x, midPoint.y, midPoint.z]
+});
+
+// 4.创建 line2 与 arc1 相切约束.
+Sketch.addConstraint({
+    constraintType: ConstraintType.Tangency,
+    firstSnapId: line2,
+    firstSnapType: 1,
+    firstPickPnt: [p5.x, p5.y, p5.z],
+    secondSnapId: arc1,
+    secondSnapType: 1,
+    secondPickPnt: [midPoint.x, midPoint.y, midPoint.z]
+});
+
+// 5.退出草图。
+Sketch.exitSketch();
+
+// 4.创建平行于 Y 轴并且向正 X 方向移动 20 个单位的旋转轴。
+var rotationAxisStart = new Point(20, 1, 0);
+var rotationAxisEnd = new Point(20, 0, 0);
+var axis1 = new Axis(rotationAxisStart, rotationAxisEnd);
+
+// 6.获取草图1的 ID。
+var sketch1Id = Query.getEntityIdByFeatureName('sketch1');
+
+// 7.草图1按照旋转轴执行旋转凸台操作。
+var rotatedSolid = Solid.revolve('rotatedSolid', {
+    sketch: sketch1Id,
+    axis: axis1,
+    angle1: 360,
+    solidType: 0
+});
+
+// 1.创建草图2。
+var sketch2 = Sketch.createSketch('sketch2', 0);
+// 2.绘制草图2的形状。
+var p9 = new Point(-60, 0, 0);
+var p10 = new Point(-60, 10, 0);
+var p11 = new Point(-70, 10, 0);
+var p12 = new Point(-70, 0, 0);
+
+Sketch.createLine(p9, p10);
+Sketch.createLine(p10, p11);
+Sketch.createLine(p11, p12);
+Sketch.createLine(p12, p9);
+
+Sketch.exitSketch();
+
+// 4.创建平行于 Y 轴并且向正 X 方向移动 20 个单位的旋转轴。
+var axis2 = new Axis(p11, p12);
+
+// 6.获取草图1的 ID。
+var sketch2Id = Query.getEntityIdByFeatureName('sketch2');
+var rotatedSolidId = Query.getEntityIdByFeatureName('rotatedSolid');
+
+// 7.草图1按照旋转轴执行旋转凸台操作。
+var revolveCut = Solid.revolveCut('revolveCut',{
+  sketch: sketch2Id,
+  axis: axis2,
+  angle1: 360,
+  cutSolids:[rotatedSolidId]
+});
+// Query.getFeatureIdByFeatureName('featureName');
+
+var revolveCutId = Query.getFeatureIdByFeatureName('revolveCut');
+
+//圆周阵列
+Solid.circularPattern('circularPattern',{
+  baseType: 1,
+  features: [revolveCutId],
+  axis: axis1,
+  angle1: 360,
+  instanceNum1: 6
+});
